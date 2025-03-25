@@ -3,7 +3,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 
 const Model = () => {
-  const { scene } = useGLTF("/src/assets/Welmake.glb");
+  const { scene } = useGLTF("../../public/models/Welmake.glb");
   const modelRef = useRef();
 
   useFrame(() => {
@@ -18,8 +18,8 @@ const Model = () => {
 const ModelViewer = () => {
   return (
     <Canvas camera={{ position: [0, 1, 5] }}>
-       <ambientLight intensity={2} /> 
-      <directionalLight position={[5, 5, 5]} intensity={2.3} /> 
+       <ambientLight intensity={3} /> 
+      <directionalLight position={[5, 5, 5]} intensity={2.5} /> 
       <pointLight position={[-5, 5, 5]} intensity={2.5} />  
       <Model />
       <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
