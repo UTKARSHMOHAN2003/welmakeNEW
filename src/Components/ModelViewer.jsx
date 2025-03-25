@@ -3,7 +3,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 
 const Model = () => {
-  const { scene } = useGLTF("../../public/models/Welmake.glb");
+  const { scene } = useGLTF("/models/Welmake.glb");
   const modelRef = useRef();
 
   useFrame(() => {
