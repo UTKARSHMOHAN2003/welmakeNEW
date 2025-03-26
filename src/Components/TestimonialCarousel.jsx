@@ -47,10 +47,10 @@ const TestimonialCarousel = () => {
           READ WHAT OUR CUSTOMERS HAVE TO SAY:
         </p>
 
-        <div className="flex flex-col md:flex-row gap-8 mb-12">
+        <div className="flex flex-col md:flex-row gap-8 mb-12 lg:w-1/2  md:w-1/2">
           {/* Testimonial Text */}
           <div
-            className={`bg-white rounded-lg p-8 text-[#005486] shadow-lg flex-1 transition-all duration-500 ease-in-out ${
+            className={`bg-white rounded-lg p-8 text-[#005486] shadow-lg flex-1  transition-all duration-500 ease-in-out ${
               isAnimating
                 ? "opacity-0 translate-x-8"
                 : "opacity-100 translate-x-0"
@@ -67,7 +67,7 @@ const TestimonialCarousel = () => {
           </div>
 
           {/* Testimonial Image */}
-          <div
+          {/* <div
             className={`rounded-lg overflow-hidden shadow-lg flex-1 max-w-md transition-all duration-500 ease-in-out ${
               isAnimating
                 ? "opacity-0 -translate-x-8"
@@ -79,8 +79,8 @@ const TestimonialCarousel = () => {
               alt={`${currentTestimonial.author} portrait`}
               className="w-full h-full object-cover"
             />
-          </div>
-        </div>
+         </div> */}
+      </div>
 
         <div className="flex justify-between items-center">
           <div className="font-bold font-baloo text-xl bg-[#F9D423] text-[#005486] px-6 py-2 rounded-full">

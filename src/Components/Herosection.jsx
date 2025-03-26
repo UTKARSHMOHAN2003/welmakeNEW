@@ -104,7 +104,7 @@ function HeroSection() {
           >
             <div className="overflow-hidden">
               <motion.h1
-                className="text-6xl md:text-8xl font-baloo font-bold text-indigo-900 leading-tight"
+                className="mt-8 text-6xl md:text-8xl font-baloo font-bold text-indigo-900 leading-tight"
                 initial={{ y: 100 }}
                 animate={{ y: 0 }}
                 transition={{

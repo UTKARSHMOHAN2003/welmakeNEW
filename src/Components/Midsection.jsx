@@ -77,7 +77,7 @@ function FeaturesSection() {
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex flex-col items-center justify-center text-amber-900 font-extrabold text-xl sm:text-2xl bg-yellow-300 px-6 py-3 rounded-lg shadow-md text-center"
+                className="flex flex-col items-center justify-center text-[#005486] font-baloo font-extrabold text-xl sm:text-2xl bg-yellow-300 px-6 py-3 rounded-lg shadow-md text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
