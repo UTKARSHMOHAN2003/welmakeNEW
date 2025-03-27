@@ -1,70 +1,119 @@
-import React, { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 
 const AboutUs = () => {
   // Team members data
   const teamMembers = [
-    { id: 1, name: "Sarah Johnson", role: "CEO" },
-    { id: 2, name: "Michael Chen", role: "CTO" },
-    { id: 3, name: "Olivia Rodriguez", role: "CFO" },
-    { id: 4, name: "David Wilson", role: "COO" },
-    { id: 5, name: "Emily Taylor", role: "CMO" },
+    { 
+      id: 1, 
+      name: "Sarah Johnson", 
+      role: "CEO", 
+      bio: "Visionary leader with 20+ years of strategic management experience.",
+      specialties: ["Strategic Planning", "Innovation", "Global Business"]
+    },
+    { 
+      id: 2, 
+      name: "Michael Chen", 
+      role: "CTO", 
+      bio: "Tech innovator driving digital transformation and cutting-edge solutions.",
+      specialties: ["Technology Strategy", "AI", "Product Development"]
+    },
+    { 
+      id: 3, 
+      name: "Olivia Rodriguez", 
+      role: "CFO", 
+      bio: "Financial expert ensuring sustainable growth and fiscal responsibility.",
+      specialties: ["Financial Strategy", "Risk Management", "Investment"]
+    },
+    { 
+      id: 4, 
+      name: "David Wilson", 
+      role: "COO", 
+      bio: "Operations mastermind optimizing efficiency and operational excellence.",
+      specialties: ["Process Optimization", "Supply Chain", "Organizational Development"]
+    },
+    { 
+      id: 5, 
+      name: "Emily Taylor", 
+      role: "CMO", 
+      bio: "Marketing strategist building powerful brand narratives and customer connections.",
+      specialties: ["Brand Strategy", "Digital Marketing", "Customer Experience"]
+    }
   ];
 
   // Partner companies data
   const partners = [
     "Microsoft",
-    "Google",
-    "Amazon",
-    "Apple",
-    "Tesla",
-    "IBM",
-    "Oracle",
+    "Google", 
+    "Amazon", 
+    "Apple", 
+    "Tesla", 
+    "IBM", 
+    "Oracle"
   ];
 
-  // States for carousels
-  const [teamIndex, setTeamIndex] = useState(0);
-  const [partnerIndex, setPartnerIndex] = useState(0);
-
-  // Function to handle team carousel navigation
-  const navigateTeam = (direction) => {
-    if (direction === "next") {
-      setTeamIndex((prev) => (prev + 1) % (teamMembers.length - 2));
-    } else {
-      setTeamIndex((prev) => (prev === 0 ? teamMembers.length - 3 : prev - 1));
-    }
+  // Slick Carousel settings for team members
+  const teamSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
-  // Function to handle partner carousel navigation
-  const navigatePartners = (direction) => {
-    if (direction === "next") {
-      setPartnerIndex((prev) => (prev + 1) % (partners.length - 3));
-    } else {
-      setPartnerIndex((prev) => (prev === 0 ? partners.length - 4 : prev - 1));
-    }
+  // Slick Carousel settings for partners
+  const partnerSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 4000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
-
-  // Auto advance carousels
-  useEffect(() => {
-    const teamInterval = setInterval(() => {
-      navigateTeam("next");
-    }, 5000);
-
-    const partnerInterval = setInterval(() => {
-      navigatePartners("next");
-    }, 4000);
-
-    return () => {
-      clearInterval(teamInterval);
-      clearInterval(partnerInterval);
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+      
       {/* Logo and Header Section */}
       <div className="bg-gray-200 py-16 px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-bold uppercase tracking-wider mb-4">
@@ -97,108 +146,43 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Team Section with Carousel */}
+      {/* Team Section with Slick Carousel */}
       <div className="bg-[#005486] py-16 px-4 sm:px-6 lg:px-8 text-white">
         <h2 className="text-3xl font-bold font-baloo text-center uppercase mb-12">
           Meet Our Team
         </h2>
 
-        <div className="relative max-w-5xl mx-auto">
-          {/* Team Carousel Navigation */}
-          <button
-            onClick={() => navigateTeam("prev")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
-          >
-            <FaChevronLeft size={24} />
-          </button>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-            {/* Show 3 team members at a time */}
-            {[0, 1, 2].map((offset) => {
-              const member =
-                teamMembers[(teamIndex + offset) % teamMembers.length];
-              return (
-                <div key={member.id} className="flex flex-col items-center">
-                  <div className="bg-yellow-400 w-full aspect-square mb-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow"></div>
+        <div className="max-w-6xl mx-auto ">
+          <Slider {...teamSliderSettings}>
+            {teamMembers.map((member) => (
+              <div key={member.id} className="px-4">
+                <div className="flex flex-col items-center">
+                  <div className="bg-yellow-400 w-full aspect-square mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"></div>
                   <h3 className="text-xl font-semibold mt-2">{member.name}</h3>
                   <p className="text-blue-200">{member.role}</p>
                 </div>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={() => navigateTeam("next")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
-          >
-            <FaChevronRight size={24} />
-          </button>
-
-          {/* Carousel Indicators */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: teamMembers.length - 2 }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setTeamIndex(idx)}
-                className={`w-3 h-3 rounded-full ${
-                  idx === teamIndex ? "bg-yellow-400" : "bg-blue-600"
-                }`}
-              />
+              </div>
             ))}
-          </div>
+          </Slider>
         </div>
       </div>
 
-      {/* Partners Section with Carousel */}
+      {/* Partners Section with Slick Carousel */}
       <div className="bg-Byellow py-12 px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-lg sm:text-xl font-medium font-baloo mb-10 text-blue-900">
           Trusted by the best companies worldwide
         </p>
 
-        <div className="relative max-w-6xl mx-auto">
-          {/* Partners Carousel Navigation */}
-          <button
-            onClick={() => navigatePartners("prev")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-4 bg-yellow-300 p-2 rounded-full z-10 text-blue-800 hover:bg-yellow-400 transition-colors"
-          >
-            <FaChevronLeft size={24} />
-          </button>
-
-          <div className="flex flex-wrap justify-center gap-4 px-4">
-            {/* Show partners at a time */}
-            {[0, 1, 2].map((offset) => {
-              const partner =
-                partners[(partnerIndex + offset) % partners.length];
-              return (
-                <div
-                  key={offset}
-                  className="bg-yellow-300 px-6 py-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center justify-center w-full sm:w-1/2 lg:w-1/4"
-                >
+        <div className="max-w-6xl mx-auto">
+          <Slider {...partnerSliderSettings}>
+            {partners.map((partner) => (
+              <div key={partner} className="px-4">
+                <div className="bg-yellow-300 px-6 py-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center justify-center">
                   <span className="font-medium text-blue-900">{partner}</span>
                 </div>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={() => navigatePartners("next")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-4 bg-yellow-300 p-2 rounded-full z-10 text-blue-800 hover:bg-yellow-400 transition-colors"
-          >
-            <FaChevronRight size={24} />
-          </button>
-
-          {/* Carousel Indicators */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: partners.length - 3 }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setPartnerIndex(idx)}
-                className={`w-3 h-3 rounded-full ${
-                  idx === partnerIndex ? "bg-yellow-400" : "bg-yellow-200"
-                }`}
-              />
+              </div>
             ))}
-          </div>
+          </Slider>
         </div>
       </div>
       <Footer />
