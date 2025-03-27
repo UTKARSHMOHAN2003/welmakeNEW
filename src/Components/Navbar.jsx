@@ -55,6 +55,13 @@ const WellMakeNavbar = () => {
 
           {/* Desktop navigation links */}
           <div className="hidden md:flex items-center space-x-8">
+          <NavLink
+            to="/"
+              className="text-blue-800  text-lg font-baloo font-bold tracking-wide hover:text-blue-600 transition-colors duration-300 relative overflow-hidden group"
+            >
+              <span>Home</span>
+              <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-blue-800 transition-all duration-300 group-hover:w-full"></span>
+            </NavLink>
             <NavLink
             to="/contact"
               className="text-blue-800  text-lg font-baloo font-bold tracking-wide hover:text-blue-600 transition-colors duration-300 relative overflow-hidden group"

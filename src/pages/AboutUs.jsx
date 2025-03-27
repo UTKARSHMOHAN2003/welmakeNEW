@@ -1,70 +1,141 @@
-import React, { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import React, { useState, useEffect, useMemo } from "react";
+import { ChevronLeft, ChevronRight, User, Building2 } from "lucide-react";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 
+// Separate component for carousel navigation
+const CarouselNavigation = ({ 
+  onPrev, 
+  onNext, 
+  indicators, 
+  currentIndex, 
+  onIndicatorClick,
+  indicatorActiveClass,
+  indicatorInactiveClass 
+}) => (
+  <>
+    <button
+      onClick={onPrev}
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
+      aria-label="Previous"
+    >
+      <ChevronLeft size={24} />
+    </button>
+
+    <button
+      onClick={onNext}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
+      aria-label="Next"
+    >
+      <ChevronRight size={24} />
+    </button>
+
+    <div className="flex justify-center mt-8 space-x-2">
+      {indicators.map((_, idx) => (
+        <button
+          key={idx}
+          onClick={() => onIndicatorClick(idx)}
+          className={`w-3 h-3 rounded-full transition-colors ${
+            idx === currentIndex ? indicatorActiveClass : indicatorInactiveClass
+          }`}
+          aria-label={`Go to slide ${idx + 1}`}
+        />
+      ))}
+    </div>
+  </>
+);
+
 const AboutUs = () => {
-  // Team members data
+  // Team members data with additional information
   const teamMembers = [
-    { id: 1, name: "Sarah Johnson", role: "CEO" },
-    { id: 2, name: "Michael Chen", role: "CTO" },
-    { id: 3, name: "Olivia Rodriguez", role: "CFO" },
-    { id: 4, name: "David Wilson", role: "COO" },
-    { id: 5, name: "Emily Taylor", role: "CMO" },
+    { 
+      id: 1, 
+      name: "Sarah Johnson", 
+      role: "CEO", 
+      bio: "Visionary leader with 20+ years of strategic management experience.",
+      specialties: ["Strategic Planning", "Innovation", "Global Business"]
+    },
+    { 
+      id: 2, 
+      name: "Michael Chen", 
+      role: "CTO", 
+      bio: "Tech innovator driving digital transformation and cutting-edge solutions.",
+      specialties: ["Technology Strategy", "AI", "Product Development"]
+    },
+    { 
+      id: 3, 
+      name: "Olivia Rodriguez", 
+      role: "CFO", 
+      bio: "Financial expert ensuring sustainable growth and fiscal responsibility.",
+      specialties: ["Financial Strategy", "Risk Management", "Investment"]
+    },
+    { 
+      id: 4, 
+      name: "David Wilson", 
+      role: "COO", 
+      bio: "Operations mastermind optimizing efficiency and operational excellence.",
+      specialties: ["Process Optimization", "Supply Chain", "Organizational Development"]
+    },
+    { 
+      id: 5, 
+      name: "Emily Taylor", 
+      role: "CMO", 
+      bio: "Marketing strategist building powerful brand narratives and customer connections.",
+      specialties: ["Brand Strategy", "Digital Marketing", "Customer Experience"]
+    }
   ];
 
   // Partner companies data
   const partners = [
     "Microsoft",
-    "Google",
-    "Amazon",
-    "Apple",
-    "Tesla",
-    "IBM",
-    "Oracle",
+    "Google", 
+    "Amazon", 
+    "Apple", 
+    "Tesla", 
+    "IBM", 
+    "Oracle"
   ];
 
   // States for carousels
   const [teamIndex, setTeamIndex] = useState(0);
   const [partnerIndex, setPartnerIndex] = useState(0);
 
-  // Function to handle team carousel navigation
-  const navigateTeam = (direction) => {
-    if (direction === "next") {
-      setTeamIndex((prev) => (prev + 1) % (teamMembers.length - 2));
-    } else {
-      setTeamIndex((prev) => (prev === 0 ? teamMembers.length - 3 : prev - 1));
-    }
-  };
+  // Memoized navigation functions with improved logic
+  const navigateTeam = useMemo(() => (direction) => {
+    setTeamIndex((prev) => {
+      const maxIndex = teamMembers.length - 3;
+      if (direction === "next") {
+        return (prev + 1) % maxIndex;
+      }
+      return prev === 0 ? maxIndex - 1 : prev - 1;
+    });
+  }, [teamMembers.length]);
 
-  // Function to handle partner carousel navigation
-  const navigatePartners = (direction) => {
-    if (direction === "next") {
-      setPartnerIndex((prev) => (prev + 1) % (partners.length - 3));
-    } else {
-      setPartnerIndex((prev) => (prev === 0 ? partners.length - 4 : prev - 1));
-    }
-  };
+  const navigatePartners = useMemo(() => (direction) => {
+    setPartnerIndex((prev) => {
+      const maxIndex = partners.length - 3;
+      if (direction === "next") {
+        return (prev + 1) % maxIndex;
+      }
+      return prev === 0 ? maxIndex - 1 : prev - 1;
+    });
+  }, [partners.length]);
 
-  // Auto advance carousels
+  // Auto-advance carousels with cleanup
   useEffect(() => {
-    const teamInterval = setInterval(() => {
-      navigateTeam("next");
-    }, 5000);
-
-    const partnerInterval = setInterval(() => {
-      navigatePartners("next");
-    }, 4000);
+    const teamInterval = setInterval(() => navigateTeam("next"), 5000);
+    const partnerInterval = setInterval(() => navigatePartners("next"), 4000);
 
     return () => {
       clearInterval(teamInterval);
       clearInterval(partnerInterval);
     };
-  }, []);
+  }, [navigateTeam, navigatePartners]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+      
       {/* Logo and Header Section */}
       <div className="bg-gray-200 py-16 px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-bold uppercase tracking-wider mb-4">
@@ -104,19 +175,9 @@ const AboutUs = () => {
         </h2>
 
         <div className="relative max-w-5xl mx-auto">
-          {/* Team Carousel Navigation */}
-          <button
-            onClick={() => navigateTeam("prev")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
-          >
-            <FaChevronLeft size={24} />
-          </button>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-            {/* Show 3 team members at a time */}
             {[0, 1, 2].map((offset) => {
-              const member =
-                teamMembers[(teamIndex + offset) % teamMembers.length];
+              const member = teamMembers[(teamIndex + offset) % teamMembers.length];
               return (
                 <div key={member.id} className="flex flex-col items-center">
                   <div className="bg-yellow-400 w-full aspect-square mb-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow"></div>
@@ -127,25 +188,15 @@ const AboutUs = () => {
             })}
           </div>
 
-          <button
-            onClick={() => navigateTeam("next")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-4 bg-blue-700 p-2 rounded-full z-10 text-white hover:bg-blue-600 transition-colors"
-          >
-            <FaChevronRight size={24} />
-          </button>
-
-          {/* Carousel Indicators */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: teamMembers.length - 2 }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setTeamIndex(idx)}
-                className={`w-3 h-3 rounded-full ${
-                  idx === teamIndex ? "bg-yellow-400" : "bg-blue-600"
-                }`}
-              />
-            ))}
-          </div>
+          <CarouselNavigation
+            onPrev={() => navigateTeam("prev")}
+            onNext={() => navigateTeam("next")}
+            indicators={Array.from({ length: teamMembers.length - 2 })}
+            currentIndex={teamIndex}
+            onIndicatorClick={setTeamIndex}
+            indicatorActiveClass="bg-yellow-400"
+            indicatorInactiveClass="bg-blue-600"
+          />
         </div>
       </div>
 
@@ -156,19 +207,9 @@ const AboutUs = () => {
         </p>
 
         <div className="relative max-w-6xl mx-auto">
-          {/* Partners Carousel Navigation */}
-          <button
-            onClick={() => navigatePartners("prev")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-4 bg-yellow-300 p-2 rounded-full z-10 text-blue-800 hover:bg-yellow-400 transition-colors"
-          >
-            <FaChevronLeft size={24} />
-          </button>
-
           <div className="flex flex-wrap justify-center gap-4 px-4">
-            {/* Show partners at a time */}
             {[0, 1, 2].map((offset) => {
-              const partner =
-                partners[(partnerIndex + offset) % partners.length];
+              const partner = partners[(partnerIndex + offset) % partners.length];
               return (
                 <div
                   key={offset}
@@ -180,25 +221,15 @@ const AboutUs = () => {
             })}
           </div>
 
-          <button
-            onClick={() => navigatePartners("next")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-4 bg-yellow-300 p-2 rounded-full z-10 text-blue-800 hover:bg-yellow-400 transition-colors"
-          >
-            <FaChevronRight size={24} />
-          </button>
-
-          {/* Carousel Indicators */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: partners.length - 3 }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setPartnerIndex(idx)}
-                className={`w-3 h-3 rounded-full ${
-                  idx === partnerIndex ? "bg-yellow-400" : "bg-yellow-200"
-                }`}
-              />
-            ))}
-          </div>
+          <CarouselNavigation
+            onPrev={() => navigatePartners("prev")}
+            onNext={() => navigatePartners("next")}
+            indicators={Array.from({ length: partners.length - 3 })}
+            currentIndex={partnerIndex}
+            onIndicatorClick={setPartnerIndex}
+            indicatorActiveClass="bg-yellow-400"
+            indicatorInactiveClass="bg-yellow-200"
+          />
         </div>
       </div>
       <Footer />
