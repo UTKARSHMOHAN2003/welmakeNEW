@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm, ValidationError } from "@formspree/react";
 import {
   FaEnvelope,
   FaMapMarkerAlt,
@@ -10,20 +11,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 
 function Contactus() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [state, handleSubmit] = useForm("xbjnojvj");
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,41 +24,66 @@ function Contactus() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               Get in Touch
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <textarea
-                name="message"
-                placeholder="Message"
-                value={formData.message}
-                onChange={handleChange}
-                rows="3"
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full flex items-center justify-center px-4 py-2 text-white bg-[#005486] rounded-md hover:bg-blue-700 transition"
-              >
-                <FaPaperPlane className="mr-2" /> Send
-              </button>
-            </form>
+
+            {state.succeeded ? (
+              <div className="p-4 bg-green-100 rounded-md text-green-700">
+                <p className="font-medium">Thank you for your message!</p>
+                <p>We'll get back to you as soon as possible.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <ValidationError
+                  prefix="Name"
+                  field="name"
+                  errors={state.errors}
+                  className="text-red-500 text-sm"
+                />
+
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <ValidationError
+                  prefix="Email"
+                  field="email"
+                  errors={state.errors}
+                  className="text-red-500 text-sm"
+                />
+
+                <textarea
+                  name="message"
+                  placeholder="Message"
+                  rows="3"
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <ValidationError
+                  prefix="Message"
+                  field="message"
+                  errors={state.errors}
+                  className="text-red-500 text-sm"
+                />
+
+                <button
+                  type="submit"
+                  disabled={state.submitting}
+                  className="w-full flex items-center justify-center px-4 py-2 text-white bg-[#005486] rounded-md hover:bg-blue-700 transition disabled:opacity-75"
+                >
+                  <FaPaperPlane className="mr-2" />
+                  {state.submitting ? "Sending..." : "Send"}
+                </button>
+              </form>
+            )}
           </div>
 
           {/* Contact Details */}
