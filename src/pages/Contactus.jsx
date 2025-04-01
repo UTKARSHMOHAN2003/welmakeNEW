@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
+import React, { useState } from "react";
 import {
   FaEnvelope,
   FaMapMarkerAlt,
@@ -16,42 +15,6 @@ function Contactus() {
     email: "",
     message: "",
   });
-  const [mapLoading, setMapLoading] = useState(true);
-  const [mapError, setMapError] = useState(null);
-  const mapRef = useRef(null);
-
-  useEffect(() => {
-    const initMap = async () => {
-      try {
-        const loader = new Loader({
-          apiKey: "YOUR_GOOGLE_MAPS_API_KEY",
-          version: "weekly",
-        });
-        await loader.load();
-        const google = window.google;
-        const { Map, Marker } = google.maps;
-        const location = { lat: 40.7128, lng: -74.006 };
-
-        if (!mapRef.current) return;
-
-        const map = new Map(mapRef.current, {
-          center: location,
-          zoom: 15,
-          zoomControl: true,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: true,
-        });
-
-        new Marker({ position: location, map, title: "TechCorp Headquarters" });
-        setMapLoading(false);
-      } catch (error) {
-        setMapError("Failed to load the map. Please check your API key.");
-        setMapLoading(false);
-      }
-    };
-    initMap();
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -120,6 +83,14 @@ function Contactus() {
                 <FaMapMarkerAlt className="text-blue-600 mr-2" />
                 <span className="text-gray-800">
                   9 Vivekanand Puram, Indore, M.P.
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=9+Vivekanand+Puram+Bangarda,+Indore,+Madhya+Pradesh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 ml-2 underline"
+                  >
+                    Get Directions
+                  </a>
                 </span>
               </div>
               <div className="flex items-center">
@@ -135,7 +106,9 @@ function Contactus() {
               <div className="flex items-start">
                 <FaClock className="text-blue-600 mt-1" />
                 <div className="ml-3">
-                  <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                  <p className="text-gray-600">
+                    Monday - Friday: 9:00 AM - 6:00 PM
+                  </p>
                   <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
                   <p className="text-gray-600">Sunday: Closed</p>
                 </div>
@@ -147,22 +120,16 @@ function Contactus() {
         {/* Map Section */}
         <div className="bg-white rounded-lg shadow-lg mt-8 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Find Us</h2>
-          <div className="w-full h-72 rounded-lg overflow-hidden relative">
-            {mapLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-              </div>
-            )}
-            {mapError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                <p className="text-red-600">{mapError}</p>
-              </div>
-            )}
-            <div
-              ref={mapRef}
-              className="w-full h-full rounded-lg"
-              style={{ opacity: mapLoading ? 0 : 1 }}
-            />
+          <div className="w-full h-72 rounded-lg overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3683.576138273017!2d75.857727!3d22.719568!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcfc70f3b4a5%3A0x5f0b4a2a4b0f5e2!2s9%20Vivekanand%20Puram%20Bangarda%2C%20Indore%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1711900000000"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </main>
